@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shop_app/layout/shop_app/cubit/cubit.dart';
+import 'package:shop_app/layout/cubit/cubit.dart';
 import 'package:shop_app/shared/styles/colors.dart';
 
 Widget defaultFormField({
@@ -220,11 +220,11 @@ Widget buildListProduct (
                   IconButton(
                     onPressed: ()
                     {
-                      ShopCubit.get(context).changeFavorites(model.id);
+                      AppCubit.get(context).changeFavorites(model.id);
                     },
                     icon: CircleAvatar(
                         radius: 15,
-                        backgroundColor: ShopCubit.get(context).favorites[model.id] ?? false ? defaultColor : Colors.grey,
+                        backgroundColor: AppCubit.get(context).favorites[model.id] ?? false ? defaultColor : Colors.grey,
                         child: const Icon(
                           Icons.favorite_border,
                           size: 20,

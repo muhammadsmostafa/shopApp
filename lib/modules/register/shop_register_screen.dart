@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_app/layout/shop_app/shop_layout.dart';
-import 'package:shop_app/modules/shop_app/login/cubit/cubit.dart';
-import 'package:shop_app/modules/shop_app/login/shop_login_screen.dart';
-import 'package:shop_app/modules/shop_app/register/cubit/states.dart';
+import 'package:shop_app/layout/shop_layout.dart';
+import 'package:shop_app/modules/login/cubit/cubit.dart';
+import 'package:shop_app/modules/login/login_screen.dart';
 import 'package:shop_app/shared/components/components.dart';
 import 'package:shop_app/shared/components/constants.dart';
 import 'package:shop_app/shared/network/local/cashe_helper.dart';
 import 'cubit/cubit.dart';
+import 'cubit/states.dart';
 
-class ShopRegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatelessWidget {
   var formKey = GlobalKey<FormState>();
   var nameController = TextEditingController();
   var emailController = TextEditingController();
@@ -21,13 +21,13 @@ class ShopRegisterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (BuildContext context) => ShopRegisterCubit(),),
-        BlocProvider(create: (BuildContext context) => ShopLoginCubit(),),
+        BlocProvider(create: (BuildContext context) => RegisterCubit(),),
+        BlocProvider(create: (BuildContext context) => LoginCubit(),),
         ],
-        child: BlocConsumer<ShopRegisterCubit,ShopRegisterStates>(
+        child: BlocConsumer<RegisterCubit,RegisterStates>(
           listener: (context,state)
           {
-            if(state is ShopRegisterSuccessState)
+            if(state is RegisterSuccessState)
             {
               showToast(
                 message: state.loginModel.message,
@@ -39,10 +39,10 @@ class ShopRegisterScreen extends StatelessWidget {
                 navigateAndFinish
                   (
                   context,
-                  const ShopLayout(),
+                  const AppLayout(),
                 );
               });
-            } else if (state is ShopRegisterErrorState)
+            } else if (state is RegisterErrorState)
             {
               showToast(
                 message:'Wrong Data',
@@ -135,13 +135,13 @@ class ShopRegisterScreen extends StatelessWidget {
                                 return 'password is too short';
                               }
                             },
-                            isPassword: ShopRegisterCubit.get(context).isPassword,
+                            isPassword: RegisterCubit.get(context).isPassword,
                             label: 'Password',
                             prefix: Icons.lock_outline,
-                            suffix: ShopRegisterCubit.get(context).suffix,
+                            suffix: RegisterCubit.get(context).suffix,
                             suffixPressed: ()
                             {
-                              ShopRegisterCubit.get(context).changePasswordVisibility();
+                              RegisterCubit.get(context).changePasswordVisibility();
                             },
                           ),
                           const SizedBox(
@@ -161,19 +161,19 @@ class ShopRegisterScreen extends StatelessWidget {
                                 return 'password not match';
                               }
                             },
-                            isPassword: ShopRegisterCubit.get(context).isConfirmPassword,
+                            isPassword: RegisterCubit.get(context).isConfirmPassword,
                             label: 'Confirm password',
                             prefix: Icons.lock_outline,
-                            suffix: ShopRegisterCubit.get(context).suffixConfirm,
+                            suffix: RegisterCubit.get(context).suffixConfirm,
                             suffixPressed: ()
                             {
-                              ShopRegisterCubit.get(context).changeConfirmPasswordVisibility();
+                              RegisterCubit.get(context).changeConfirmPasswordVisibility();
                             },
                           ),
                           const SizedBox(
                             height: 30,
                           ),
-                            state is ShopRegisterLoadingState
+                            state is RegisterLoadingState
                               ?
                             const Center(child: CircularProgressIndicator())
                                 :
@@ -181,7 +181,7 @@ class ShopRegisterScreen extends StatelessWidget {
                               function: () {
                                 if(formKey.currentState!.validate())
                                 {
-                                  ShopRegisterCubit.get(context).userRegister(
+                                  RegisterCubit.get(context).userRegister(
                                     name: nameController.text,
                                     email: emailController.text,
                                     password: passwordController.text,
@@ -201,7 +201,7 @@ class ShopRegisterScreen extends StatelessWidget {
                                   function: () {
                                     navigateAndFinish(
                                         context,
-                                        ShopLoginScreen());
+                                        LoginScreen());
                                   },
                                   text: 'login'
                               ),

@@ -2,17 +2,17 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_app/models/shop_app/login_model.dart';
-import 'package:shop_app/modules/shop_app/register/cubit/states.dart';
+import 'package:shop_app/models/login_model.dart';
+import 'package:shop_app/modules/register/cubit/states.dart';
 import 'package:shop_app/shared/network/remote/dio_helper.dart';
 import 'package:shop_app/shared/network/remote/end_points.dart';
 
-class ShopRegisterCubit extends Cubit<ShopRegisterStates> {
-  ShopRegisterCubit() : super(ShopRegisterInitialState());
+class RegisterCubit extends Cubit<RegisterStates> {
+  RegisterCubit() : super(RegisterInitialState());
 
-  static ShopRegisterCubit get(context) => BlocProvider.of(context);
+  static RegisterCubit get(context) => BlocProvider.of(context);
 
-  ShopLoginModel? loginModel;
+  LoginModel? loginModel;
 
   void userRegister({
     required String name,
@@ -21,7 +21,7 @@ class ShopRegisterCubit extends Cubit<ShopRegisterStates> {
     required String phone,
   })
   {
-    emit(ShopRegisterLoadingState());
+    emit(RegisterLoadingState());
     DioHelper.postData(
         url: REGISTER,
         data:{
@@ -31,10 +31,10 @@ class ShopRegisterCubit extends Cubit<ShopRegisterStates> {
           'phone': phone,
         },
     ).then((value){
-    loginModel = ShopLoginModel.fromJson(value.data);
-    emit(ShopRegisterSuccessState(loginModel!));
+    loginModel = LoginModel.fromJson(value.data);
+    emit(RegisterSuccessState(loginModel!));
   }).catchError((error){
-      emit(ShopRegisterErrorState());
+      emit(RegisterErrorState());
     });
   }
 
@@ -45,7 +45,7 @@ class ShopRegisterCubit extends Cubit<ShopRegisterStates> {
   {
     isPassword = !isPassword;
     suffix = isPassword ? Icons.visibility_outlined : Icons.visibility_off_outlined;
-    emit(ShopRegisterChangePasswordVisibilityState());
+    emit(RegisterChangePasswordVisibilityState());
   }
 
   IconData suffixConfirm = Icons.visibility_outlined;
@@ -55,6 +55,6 @@ class ShopRegisterCubit extends Cubit<ShopRegisterStates> {
   {
     isConfirmPassword = !isConfirmPassword;
     suffixConfirm = isConfirmPassword ? Icons.visibility_outlined : Icons.visibility_off_outlined;
-    emit(ShopRegisterChangePasswordVisibilityState());
+    emit(RegisterChangePasswordVisibilityState());
   }
 }

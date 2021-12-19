@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_app/layout/shop_app/cubit/cubit.dart';
-import 'package:shop_app/layout/shop_app/cubit/states.dart';
+import 'package:shop_app/layout/cubit/cubit.dart';
+import 'package:shop_app/layout/cubit/states.dart';
 import 'package:shop_app/shared/components/components.dart';
 
 class FavoritesScreen extends StatelessWidget {
@@ -10,25 +10,25 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ShopCubit,ShopStates>(
+    return BlocConsumer<AppCubit,AppStates>(
       listener: (context, state) {},
       builder: (context, state){
-        return ShopCubit.get(context).isFavError
+        return AppCubit.get(context).isFavError
         ?
         noFavData()
         :
-        ShopCubit.get(context).favoritesModel==null
+        AppCubit.get(context).favoritesModel==null
         ?
         const Center(child: CircularProgressIndicator())
         :
-        state is ShopErrorGetFavoritesState
+        state is AppErrorGetFavoritesState
         ?
         noFavData()
         :
         ListView.separated(
-            itemBuilder: (context,index) => buildListProduct(ShopCubit.get(context).favoritesModel!.data.data[index].product, context),
+            itemBuilder: (context,index) => buildListProduct(AppCubit.get(context).favoritesModel!.data.data[index].product, context),
             separatorBuilder: (context,index) => myDivider(),
-            itemCount: ShopCubit.get(context).favoritesModel!.data.data.length,
+            itemCount: AppCubit.get(context).favoritesModel!.data.data.length,
         );
       },
     );

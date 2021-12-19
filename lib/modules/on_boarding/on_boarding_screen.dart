@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/modules/login/login_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:shop_app/modules/shop_app/login/shop_login_screen.dart';
 import 'package:shop_app/shared/components/components.dart';
 import 'package:shop_app/shared/network/local/cashe_helper.dart';
 import 'package:shop_app/shared/styles/colors.dart';
@@ -57,7 +57,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         {
           navigateAndFinish(
             context,
-            ShopLoginScreen(),
+            LoginScreen(),
           );
         }
     });

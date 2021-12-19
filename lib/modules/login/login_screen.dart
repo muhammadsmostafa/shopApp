@@ -1,29 +1,30 @@
 import 'package:buildcondition/buildcondition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_app/layout/shop_app/shop_layout.dart';
-import 'package:shop_app/modules/shop_app/login/cubit/states.dart';
-import 'package:shop_app/modules/shop_app/register/shop_register_screen.dart';
+import 'package:shop_app/layout/shop_layout.dart';
+import 'package:shop_app/modules/register/shop_register_screen.dart';
 import 'package:shop_app/shared/components/components.dart';
 import 'package:shop_app/shared/components/constants.dart';
 import 'package:shop_app/shared/network/local/cashe_helper.dart';
-import 'cubit/cubit.dart';
 
-class ShopLoginScreen extends StatelessWidget {
+import 'cubit/cubit.dart';
+import 'cubit/states.dart';
+
+class LoginScreen extends StatelessWidget {
   var formKey = GlobalKey<FormState>();
 
-  ShopLoginScreen({Key? key}) : super(key: key);
+  LoginScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     var emailController = TextEditingController();
     var passwordController = TextEditingController();
 
     return BlocProvider(
-      create: (BuildContext context) => ShopLoginCubit(),
-      child: BlocConsumer <ShopLoginCubit,ShopLoginStates>(
+      create: (BuildContext context) => LoginCubit(),
+      child: BlocConsumer <LoginCubit,LoginStates>(
         listener: (context, state)
         {
-          if(state is ShopLoginSuccessState)
+          if(state is LoginSuccessState)
             {
                   showToast(
                     message: state.loginModel.message,
@@ -33,10 +34,10 @@ class ShopLoginScreen extends StatelessWidget {
                       {
                         Token = state.loginModel.data!.token;
                         navigateAndFinish(context,
-                          const ShopLayout(),
+                          const AppLayout(),
                         );
                       });
-            } else if (state is ShopLoginErrorState)
+            } else if (state is LoginErrorState)
               {
                 showToast(
                   message:'Wrong data',
@@ -99,31 +100,31 @@ class ShopLoginScreen extends StatelessWidget {
                           onSubmit: (value)
                           {
                           if(formKey.currentState!.validate()) {
-                            ShopLoginCubit.get(context).userLogin(
+                            LoginCubit.get(context).userLogin(
                               email: emailController.text,
                               password: passwordController.text,
                             );
                           }
                           },
-                          isPassword: ShopLoginCubit.get(context).isPassword,
+                          isPassword: LoginCubit.get(context).isPassword,
                           label: 'Password',
                           prefix: Icons.lock_outline,
-                          suffix: ShopLoginCubit.get(context).suffix,
+                          suffix: LoginCubit.get(context).suffix,
                           suffixPressed: ()
                           {
-                            ShopLoginCubit.get(context).changePasswordVisibility();
+                            LoginCubit.get(context).changePasswordVisibility();
                           },
                         ),
                         const SizedBox(
                           height: 30,
                         ),
                         BuildCondition(
-                          condition: state is! ShopLoginLoadingState,
+                          condition: state is! LoginLoadingState,
                           builder: (context)=> defaultButton(
                               function: () {
                                 if(formKey.currentState!.validate())
                                 {
-                                  ShopLoginCubit.get(context).userLogin(
+                                  LoginCubit.get(context).userLogin(
                                     email: emailController.text,
                                     password: passwordController.text,
                                   );
@@ -143,7 +144,7 @@ class ShopLoginScreen extends StatelessWidget {
                                 function: () {
                                   navigateTo(
                                       context,
-                                      ShopRegisterScreen());
+                                      RegisterScreen());
                                 },
                                 text: 'register'
                             ),

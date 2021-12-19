@@ -1,16 +1,15 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_app/layout/shop_app/shop_layout.dart';
-import 'package:shop_app/modules/shop_app/login/shop_login_screen.dart';
-import 'package:shop_app/modules/shop_app/on_boarding/on_boarding_screen.dart';
 import 'package:shop_app/shared/bloc_observer.dart';
 import 'package:shop_app/shared/components/constants.dart';
 import 'package:shop_app/shared/network/local/cashe_helper.dart';
 import 'package:shop_app/shared/network/remote/dio_helper.dart';
 import 'package:shop_app/shared/styles/themes.dart';
-import 'layout/shop_app/cubit/cubit.dart';
-
+import 'layout/cubit/cubit.dart';
+import 'layout/shop_layout.dart';
+import 'modules/login/login_screen.dart';
+import 'modules/on_boarding/on_boarding_screen.dart';
 
 void main() async
 {
@@ -29,9 +28,9 @@ void main() async
   if (onBoarding != null)
     {
       if(Token != null) {
-        widget = const ShopLayout();
+        widget = const AppLayout();
       } else {
-        widget = ShopLoginScreen();
+        widget = LoginScreen();
       }
     } else{
     widget = const OnBoardingScreen();
@@ -51,7 +50,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
         return BlocProvider(
-          create: (BuildContext context) => ShopCubit()..getHomeData()..getCategoriesData()..getFavoritesData()..getProfile(),
+          create: (BuildContext context) => AppCubit()..getHomeData()..getCategoriesData()..getFavoritesData()..getProfile(),
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: lightTheme,

@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_app/layout/shop_app/cubit/states.dart';
-import 'package:shop_app/models/shop_app/categories_model.dart';
-import 'package:shop_app/models/shop_app/change_favorites_model.dart';
-import 'package:shop_app/models/shop_app/favorites_model.dart';
-import 'package:shop_app/models/shop_app/home_model.dart';
-import 'package:shop_app/models/shop_app/user_model.dart';
-import 'package:shop_app/modules/shop_app/categories/categories_screen.dart';
-import 'package:shop_app/modules/shop_app/favorites/favorites_screen.dart';
-import 'package:shop_app/modules/shop_app/products/products_screen.dart';
-import 'package:shop_app/modules/shop_app/settings/settings_screen.dart';
+import 'package:shop_app/layout/cubit/states.dart';
+import 'package:shop_app/models/categories_model.dart';
+import 'package:shop_app/models/change_favorites_model.dart';
+import 'package:shop_app/models/favorites_model.dart';
+import 'package:shop_app/models/home_model.dart';
+import 'package:shop_app/models/user_model.dart';
+import 'package:shop_app/modules/categories/categories_screen.dart';
+import 'package:shop_app/modules/favorites/favorites_screen.dart';
+import 'package:shop_app/modules/products/products_screen.dart';
+import 'package:shop_app/modules/settings/settings_screen.dart';
 import 'package:shop_app/shared/components/components.dart';
 import 'package:shop_app/shared/components/constants.dart';
 import 'package:shop_app/shared/network/remote/dio_helper.dart';
 import 'package:shop_app/shared/network/remote/end_points.dart';
 
-class ShopCubit extends Cubit <ShopStates>
+class AppCubit extends Cubit <AppStates>
 {
- ShopCubit() : super(ShopInitialState());
+ AppCubit() : super(AppInitialState());
 
- static ShopCubit get(context)=> BlocProvider.of(context);
+ static AppCubit get(context)=> BlocProvider.of(context);
 
  int currentIndex = 0;
  List <Widget> bottomScreens =
@@ -33,7 +33,7 @@ class ShopCubit extends Cubit <ShopStates>
  void changeBottom(int index)
  {
   currentIndex = index;
-  emit(ShopChangeBottomNavState());
+  emit(AppChangeBottomNavState());
  }
 
  HomeModel? homeModel;
@@ -42,7 +42,7 @@ class ShopCubit extends Cubit <ShopStates>
 
  void getHomeData()
  {
-  emit(ShopLoadingHomeDataState());
+  emit(AppLoadingHomeDataState());
   DioHelper.getData(
    url: HOME,
    token: Token,
@@ -54,10 +54,10 @@ class ShopCubit extends Cubit <ShopStates>
      element.id: element.inFavorites
     });
    }
-   emit(ShopSuccessHomeDataDataState());
+   emit(AppSuccessHomeDataDataState());
   }).catchError((error)
   {
-   emit(ShopErrorHomeDataState());
+   emit(AppErrorHomeDataState());
   });
  }
 
@@ -72,10 +72,10 @@ class ShopCubit extends Cubit <ShopStates>
   ).then((value)
   {
    categoriesModel = CategoriesModel.fromJson(value.data);
-   emit(ShopSuccessCategoriesState());
+   emit(AppSuccessCategoriesState());
   }).catchError((error)
   {
-   emit(ShopErrorCategoriesState());
+   emit(AppErrorCategoriesState());
   });
  }
 
@@ -84,7 +84,7 @@ class ShopCubit extends Cubit <ShopStates>
  void changeFavorites(int productId)
  {
   favorites[productId] = !(favorites[productId]??false);
-  emit(ShopChangeFavoritesState());
+  emit(AppChangeFavoritesState());
 
   DioHelper.postData(
    url: FAVORITES,
@@ -106,14 +106,14 @@ class ShopCubit extends Cubit <ShopStates>
     message: 'Successfully',
     state: ToastStates.SUCCESS,
    );
-   emit(ShopSuccessChangeFavoritesState(changeFavoritesModel!));
+   emit(AppSuccessChangeFavoritesState(changeFavoritesModel!));
   }).catchError((error)
   {
    showToast(
     message: 'Error while change favorite',
     state: ToastStates.ERROR,
    );
-   emit(ShopErrorChangeFavoritesState());
+   emit(AppErrorChangeFavoritesState());
   });
  }
 
@@ -121,7 +121,7 @@ class ShopCubit extends Cubit <ShopStates>
  bool isFavError=false;
  void getFavoritesData()
  {
-  emit(ShopLoadingGetFavoritesState());
+  emit(AppLoadingGetFavoritesState());
   DioHelper.getData(
    url: FAVORITES,
    token: Token,
@@ -129,10 +129,10 @@ class ShopCubit extends Cubit <ShopStates>
   {
    isFavError=false;
    favoritesModel = FavoritesModel.fromJson(value.data);
-   emit(ShopSuccessGetFavoritesState());
+   emit(AppSuccessGetFavoritesState());
   }).catchError((error)
   {
-   emit(ShopErrorGetFavoritesState());
+   emit(AppErrorGetFavoritesState());
    isFavError=true;
   });
  }
@@ -140,15 +140,16 @@ class ShopCubit extends Cubit <ShopStates>
  ProfileModel? profileModel;
  void getProfile()
  {
-  emit(ShopLoadingGetUserDataState());
+  emit(AppLoadingGetUserDataState());
   DioHelper.getData(
       url: PROFILE,
       token: Token
   ).then((value){
    profileModel = ProfileModel.fromJson(value.data);
-   emit(ShopSuccessGetUserDataState());
+  }).then((value){
+   emit(AppSuccessGetUserDataState());
   }).catchError((error){
-   emit(ShopErrorGetUserDataState());
+   emit(AppErrorGetUserDataState());
   });
  }
 
@@ -158,7 +159,7 @@ class ShopCubit extends Cubit <ShopStates>
  required String phone,
 })
 {
-  emit(ShopLoadingUpdateUserState());
+  emit(AppLoadingUpdateUserState());
   DioHelper.putData(
       url: UPDATE,
       token: Token,
@@ -169,13 +170,13 @@ class ShopCubit extends Cubit <ShopStates>
        'phone': phone,
       }).then((value){
    profileModel = ProfileModel.fromJson(value.data);
-   emit(ShopSuccessUpdateUserState());
+   emit(AppSuccessUpdateUserState());
    showToast(
        message: 'Updated Successfully',
        state: ToastStates.SUCCESS
    );
   }).catchError((error){
-   emit(ShopErrorUpdateUserState());
+   emit(AppErrorUpdateUserState());
    showToast(
        message: 'Wrong Data',
        state: ToastStates.ERROR,

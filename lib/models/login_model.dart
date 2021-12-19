@@ -1,9 +1,9 @@
-class ShopLoginModel
+class LoginModel
 {
   bool? status;
   late String message;
   UserData? data;
-  ShopLoginModel.fromJson(Map<String,dynamic> json)
+  LoginModel.fromJson(Map<String,dynamic> json)
   {
     status = json['status'];
     message = json['message'];
