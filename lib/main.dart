@@ -7,7 +7,7 @@ import 'package:shop_app/shared/network/local/cashe_helper.dart';
 import 'package:shop_app/shared/network/remote/dio_helper.dart';
 import 'package:shop_app/shared/styles/themes.dart';
 import 'layout/cubit/cubit.dart';
-import 'layout/shop_layout.dart';
+import 'layout/app_layout.dart';
 import 'modules/login/login_screen.dart';
 import 'modules/on_boarding/on_boarding_screen.dart';
 

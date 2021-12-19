@@ -1,7 +1,7 @@
 import 'package:buildcondition/buildcondition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_app/layout/shop_layout.dart';
+import 'package:shop_app/layout/app_layout.dart';
 import 'package:shop_app/modules/register/shop_register_screen.dart';
 import 'package:shop_app/shared/components/components.dart';
 import 'package:shop_app/shared/components/constants.dart';
